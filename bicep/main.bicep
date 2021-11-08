@@ -11,3 +11,11 @@ module storage 'modules/storage/storage.bicep' = {
     suffix: suffix
   }
 }
+
+module dataFactory 'modules/dataFactory/factory.bicep' = {
+  name: 'datafactory'
+  params: {
+    location: location
+    suffix: suffix
+  }
+}

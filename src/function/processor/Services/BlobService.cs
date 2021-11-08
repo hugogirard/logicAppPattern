@@ -97,15 +97,15 @@ namespace processor.Services
             {
                 throw ex;
             }
-            finally 
-            {
-                // Break the lease if this is the problem
-                BlobProperties sourceBlobProperties = await sourceBlob.GetPropertiesAsync();
-                if (sourceBlobProperties.LeaseState == LeaseState.Leased && lease != null)
-                {
-                    await lease.BreakAsync();
-                }
-            }
+            // finally 
+            // {
+            //     // Break the lease if this is the problem
+            //     BlobProperties sourceBlobProperties = await sourceBlob.GetPropertiesAsync();
+            //     if (sourceBlobProperties.LeaseState == LeaseState.Leased && lease != null)
+            //     {
+            //         await lease.BreakAsync();
+            //     }
+            // }
 
             return blobStatus;
 
