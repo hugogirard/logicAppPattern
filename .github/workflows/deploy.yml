@@ -3,8 +3,9 @@ name: Deploy
 on:
   push:
     paths:
-      - 'bicep/*'
-
+      - 'bicep/**'
+  workflow_dispatch:
+  
 env:
   LOCATION: 'eastus'
   RESOURCE_GROUP_NAME: 'rg-logic-app-pattern'
