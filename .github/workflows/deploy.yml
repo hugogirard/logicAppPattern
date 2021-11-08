@@ -35,3 +35,4 @@ jobs:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
           template: ./bicep/main.bicep
+          parameters: location=${{ env.LOCATION }}
