@@ -50,17 +50,15 @@ resource storageAccountDestination'Microsoft.Storage/storageAccounts@2021-04-01'
   }
 }
 
-resource containerDocumentsSource 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
-  parent: storageAccountSource
-  name: 'documents'
+resource containerDocumentsSource 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {  
+  name: '${storageAccountSource}/default/documents'
   properties: {
     publicAccess: 'None'
   }
 }
 
-resource containerDocumentsDestination 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
-  parent: storageAccountDestination
-  name: 'documents'
+resource containerDocumentsDestination 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {  
+  name: '${storageAccountDestination}/default/documents'
   properties: {
     publicAccess: 'None'
   }
