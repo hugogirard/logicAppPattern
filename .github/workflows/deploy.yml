@@ -8,7 +8,7 @@ on:
   
 env:
   LOCATION: 'eastus'
-  RESOURCE_GROUP_NAME: 'rg-logic-app-pattern'
+  RESOURCE_GROUP_NAME: 'rg-logic-app-pattern-2'
 
 jobs:
   create-azure-resources:

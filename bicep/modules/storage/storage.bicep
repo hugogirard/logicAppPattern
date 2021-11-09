@@ -65,4 +65,5 @@ resource containerDocumentsDestination 'Microsoft.Storage/storageAccounts/blobSe
 }
 
 output storageSourceId string = storageAccountSource.id
+output storageSourceName string = storageAccountSource.name
 output storageDestinationId string = storageAccountDestination.id

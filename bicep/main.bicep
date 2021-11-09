@@ -20,11 +20,13 @@ module dataFactory 'modules/dataFactory/factory.bicep' = {
   }
 }
 
+// To fix
 module rbac 'modules/rbac/rbac.bicep' = {
   name: 'rbac'
   params: {
     destinationStorageId: storage.outputs.storageDestinationId
     sourceStorageId: storage.outputs.storageSourceId
+    sourceStorageName: storage.outputs.storageSourceName
     systemIdentityId: dataFactory.outputs.identityId
   }
 }
