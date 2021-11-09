@@ -69,11 +69,6 @@ resource datasetDestination 'Microsoft.DataFactory/factories/datasets@2018-06-01
       referenceName: linkedServiceDestinationName
       type: 'LinkedServiceReference'
     }
-    parameters: {
-      filename: {
-        type: 'String'
-      }
-    }
     annotations: []    
     type: 'Binary'
     typeProperties: {
