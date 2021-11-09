@@ -1,6 +1,14 @@
 @description('The location where the azure resources will be deployed')
 param location string
 
+@description('The client ID of the Service Principal')
+@secure()
+param clientId string
+
+@description('The client secret of the Service Principal')
+@secure()
+param clientSecret string
+
 var suffix = uniqueString(resourceGroup().id)
 
 
@@ -28,6 +36,15 @@ module logicapp 'modules/logicapp/logic.bicep' = {
     location: location
     strCnxString: storage.outputs.storageLogicAppCnxString
     suffix: suffix
+  }
+}
+
+module connections 'modules/logicapp/connections/connection.bicep' = {
+  name: 'connections'
+  params: {
+    clientId: clientId
+    clientSecret: clientSecret
+    location: location
   }
 }
 
