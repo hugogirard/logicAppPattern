@@ -28,11 +28,17 @@ jobs:
         run: |
           az group create -n ${{ env.RESOURCE_GROUP_NAME }} -l ${{ env.LOCATION }}            
 
+      # Temporary step the bicep linter return an error today for the
+      # scope in the RBAC assignments
+      - name: Convert to ARM template
+        run: |
+          bicep build ./bicep/main.bicep
+
       - name: Deploy Azure Resources
         id: armDeployment
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
-          template: ./bicep/main.bicep
+          template: ./bicep/main.json
           parameters: location=${{ env.LOCATION }}
