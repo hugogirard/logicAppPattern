@@ -19,3 +19,12 @@ module dataFactory 'modules/dataFactory/factory.bicep' = {
     suffix: suffix
   }
 }
+
+module rbac 'modules/rbac/rbac.bicep' = {
+  name: 'rbac'
+  params: {
+    destinationStorageId: storage.outputs.storageDestinationId
+    sourceStorageId: storage.outputs.storageSourceId
+    systemIdentityId: dataFactory.outputs.identityId
+  }
+}

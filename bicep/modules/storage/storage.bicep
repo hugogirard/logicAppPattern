@@ -63,3 +63,6 @@ resource containerDocumentsDestination 'Microsoft.Storage/storageAccounts/blobSe
     publicAccess: 'None'
   }
 }
+
+output storageSourceId string = storageAccountSource.id
+output storageDestinationId string = storageAccountDestination.id

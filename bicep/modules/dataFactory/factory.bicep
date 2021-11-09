@@ -11,3 +11,5 @@ resource dataFactory 'Microsoft.DataFactory/factories@2018-06-01' = {
   }
   properties: {}
 }
+
+output identityId string = dataFactory.identity.principalId
