@@ -35,7 +35,7 @@ resource storageAccountSource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   }
 }
 
-resource storageAccountDestination'Microsoft.Storage/storageAccounts@2021-04-01' = {
+resource storageAccountDestination 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: strDestName
   location: location
   sku: {
@@ -64,6 +64,5 @@ resource containerDocumentsDestination 'Microsoft.Storage/storageAccounts/blobSe
   }
 }
 
-output storageSourceId string = storageAccountSource.id
-output storageSourceName string = storageAccountSource.name
-output storageDestinationId string = storageAccountDestination.id
+output storageSourceCnxString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccountSource.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccountSource.id, storageAccountSource.apiVersion).keys[0].value}'
+output storageDestinationCnxString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccountDestination.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccountDestination.id, storageAccountDestination.apiVersion).keys[0].value}'

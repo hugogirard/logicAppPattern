@@ -20,12 +20,11 @@ module dataFactory 'modules/dataFactory/factory.bicep' = {
   }
 }
 
-// To fix
-module rbac 'modules/rbac/rbac.bicep' = {
-  name: 'rbac'
+module pipeline 'modules/dataFactory/pipeline/copytoblob.bicep' = {
+  name: 'pipeline'
   params: {
-    destinationStorageId: storage.outputs.storageDestinationId    
-    sourceStorageName: storage.outputs.storageSourceName
-    systemIdentityId: dataFactory.outputs.identityId
+    azureFactoryName: dataFactory.outputs.dataFactoryName
+    storageDestinationCnxString: storage.outputs.storageDestinationCnxString
+    storageSouceCnxString: storage.outputs.storageSourceCnxString
   }
 }

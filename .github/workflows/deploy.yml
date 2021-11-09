@@ -42,3 +42,21 @@ jobs:
           resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
           template: ./bicep/main.json
           parameters: location=${{ env.LOCATION }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: DESTINATION_STORAGE_ID
+          value: ${{ steps.armDeployment.outputs.destinationStorageId }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: SOURCE_STORAGE_NAME
+          value: ${{ steps.armDeployment.outputs.sourceStorageName }}
+          pa_token: ${{ secrets.PA_TOKEN }}     
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: SYSTEM_IDENTITY_ID
+          value: ${{ steps.armDeployment.outputs.systemIdentityId }}
+          pa_token: ${{ secrets.PA_TOKEN }}           
