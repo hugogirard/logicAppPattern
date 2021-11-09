@@ -4,6 +4,7 @@ param suffix string
 var strSourceName = 'strs${suffix}'
 var strDestName = 'strd${suffix}'
 var strFunction = 'strf${suffix}'
+var strLogicApp = 'strl${suffix}'
 
 resource storageAccountFunction 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: strFunction
@@ -18,6 +19,21 @@ resource storageAccountFunction 'Microsoft.Storage/storageAccounts@2021-04-01' =
   properties: {    
     accessTier: 'Hot'
   }
+}
+
+resource storageAccountLogicApp 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+  name: strLogicApp
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  tags: {
+    'description': 'Logic App Storage'
+  }  
+  kind: 'StorageV2'
+  properties: {    
+    accessTier: 'Hot'
+  }  
 }
 
 resource storageAccountSource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
@@ -64,5 +80,7 @@ resource containerDocumentsDestination 'Microsoft.Storage/storageAccounts/blobSe
   }
 }
 
+
 output storageSourceCnxString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccountSource.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccountSource.id, storageAccountSource.apiVersion).keys[0].value}'
 output storageDestinationCnxString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccountDestination.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccountDestination.id, storageAccountDestination.apiVersion).keys[0].value}'
+output storageLogicAppCnxString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccountLogicApp.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccountLogicApp.id, storageAccountLogicApp.apiVersion).keys[0].value}'
