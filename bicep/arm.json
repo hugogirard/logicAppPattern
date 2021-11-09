@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    // ...
+    "variables": {
+      // ...
+      "managedIdentity": "[concat('mi-', parameters('applicationName'), '-', parameters('environment'), '-', '001')]",
+      "appInsightsName": "[concat('appi-', parameters('applicationName'), '-', parameters('environment'), '-', '001')]",
+      "keyVaultName": "[concat('kv-', parameters('applicationName'), '-', parameters('environment'), '-', '001')]",
+      "storageAccountName": "[concat('st', parameters('applicationName'), parameters('environment'), '001')]",
+      "storageBlobDataContributor": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+      "keyVaultSecretsOfficer": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7')]",
+      "keyVaultCryptoOfficer": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '14b46e9e-c2b7-41b4-b07b-48a6ebf60603')]",
+      "uniqueRoleGuidKeyVaultSecretsOfficer": "[guid(resourceId('Microsoft.KeyVault/vaults',  variables('keyVaultName')), variables('keyVaultSecretsOfficer'), resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')))]",
+      "uniqueRoleGuidKeyVaultCryptoOfficer": "[guid(resourceId('Microsoft.KeyVault/vaults',  variables('keyVaultName')), variables('keyVaultCryptoOfficer'), resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')))]",
+      "uniqueRoleGuidStorageAccount": "[guid(resourceId('Microsoft.Storage/storageAccounts',  variables('storageAccountName')), variables('storageBlobDataContributor'), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+        "name": "[variables('managedIdentity')]",
+        "apiVersion": "2018-11-30",
+        "location": "[parameters('location')]"
+      },
+      // ...
+      {
+        "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+        "apiVersion": "2020-04-01-preview",
+        "name": "[concat(variables('storageAccountName'), '/Microsoft.Authorization/', variables('uniqueRoleGuidStorageAccount'))]",
+        "dependsOn": [
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentity'))]"
+        ],
+        "properties": {
+          "roleDefinitionId": "[variables('storageBlobDataContributor')]",
+          "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('managedIdentity')), '2018-11-30').principalId]",
+          "scope": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+          "principalType": "ServicePrincipal"
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/providers/roleAssignments",
+        "apiVersion": "2018-01-01-preview",
+        "name": "[concat(variables('keyVaultName'), '/Microsoft.Authorization/', variables('uniqueRoleGuidKeyVaultSecretsOfficer'))]",
+        "dependsOn": [
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentity'))]"
+        ],
+        "properties": {
+          "roleDefinitionId": "[variables('keyVaultSecretsOfficer')]",
+          "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('managedIdentity')), '2018-11-30').principalId]",
+          "scope": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+          "principalType": "ServicePrincipal"
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/providers/roleAssignments",
+        "apiVersion": "2018-01-01-preview",
+        "name": "[concat(variables('keyVaultName'), '/Microsoft.Authorization/', variables('uniqueRoleGuidKeyVaultCryptoOfficer'))]",
+        "dependsOn": [
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentity'))]"
+        ],
+        "properties": {
+          "roleDefinitionId": "[variables('keyVaultCryptoOfficer')]",
+          "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('managedIdentity')), '2018-11-30').principalId]",
+          "scope": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+          "principalType": "ServicePrincipal"
+        }
+      }
+    ]
+  }

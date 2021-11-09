@@ -24,8 +24,7 @@ module dataFactory 'modules/dataFactory/factory.bicep' = {
 module rbac 'modules/rbac/rbac.bicep' = {
   name: 'rbac'
   params: {
-    destinationStorageId: storage.outputs.storageDestinationId
-    sourceStorageId: storage.outputs.storageSourceId
+    destinationStorageId: storage.outputs.storageDestinationId    
     sourceStorageName: storage.outputs.storageSourceName
     systemIdentityId: dataFactory.outputs.identityId
   }
