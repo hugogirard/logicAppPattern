@@ -17,6 +17,7 @@
 *
 * DEMO POC - "AS IS"
 */
+using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using System;
@@ -24,33 +25,75 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using processor.Model;
+using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace processor
 {    
     public class Orchestrator
     {
         [FunctionName("ProcessorOrchestrator")]
-        public async Task RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
+        public async Task RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             string filename = context.GetInput<string>();
 
-            BlobStatus status = await context.CallActivityAsync<BlobStatus>("StartCopy", filename);
-
-            //do
-            //{
+            try
+            {
+                BlobStatus status = await context.CallActivityAsync<BlobStatus>("StartCopy", filename);
                 
+                bool getResult = false;
+                int waitingTime = -1;                           
+                string message = string.Empty;
+                do
+                {
+                    if (waitingTime >= 9)
+                    {
+                        waitingTime = 10;
+                    }
+                    else 
+                    {
+                        waitingTime += 2;
+                    }
+                                    
+                    switch (status.CopyStatus)
+                    {
+                        case CopyStatus.Pending:
+                            DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromMinutes(waitingTime));
+                            await context.CreateTimer(deadline,CancellationToken.None);
+                            status = await context.CallActivityAsync<BlobStatus>("GetCopyProgress", status.Filename);
+                            break;
+                        case CopyStatus.Success:
+                            // Send result in storage queue
+                            message = $"Copy of file {filename} success with name {status.Filename}.  Completed on: ${status.CopyCompletedOn}";
+                            getResult = true;
+                            break;
+                        default:
+                            // Send result in storage queue
+                            message = $"Copy of file {filename} failed with status {status.CopyStatus}.";
+                            getResult = true;
+                            break;
+                    }
 
-            //} while (true);
+                    if (getResult)
+                    {
+                        // Call activity to add in queue here 
+                        await context.CallActivityAsync("QueueOutput", message);                       
+                    }
+                }
+                while (!getResult);                 
+            }
+            catch (Exception ex)
+            {
 
-            //var outputs = new List<string>();
+                log.LogError(ex,ex.Message);
+                throw;
+            }
+            finally 
+            {
+                await context.CallActivityAsync("BreakLease", filename);
+            }
 
-            //// Replace "hello" with the name of your Durable Activity Function.
-            //outputs.Add(await context.CallActivityAsync<string>("Function1_Hello", "Tokyo"));
-            //outputs.Add(await context.CallActivityAsync<string>("Function1_Hello", "Seattle"));
-            //outputs.Add(await context.CallActivityAsync<string>("Function1_Hello", "London"));
 
-            //// returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
-            //return outputs;
         }
     }
 }

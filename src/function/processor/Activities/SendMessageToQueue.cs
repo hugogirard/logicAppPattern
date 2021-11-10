@@ -17,39 +17,18 @@
 *
 * DEMO POC - "AS IS"
 */
-using System;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
-using Microsoft.Extensions.Logging;
-using processor.Model;
-using processor.Services;
 
-namespace processor
+namespace processor.Activities
 {
-    public class GetProgress
+    public class SendMessageToQueue 
     {
-        private readonly IBlobService _blobService;
-
-        public GetProgress(IBlobService blobService)
+        [FunctionName("QueueOutput")]
+        [return: Queue("processed-copy", Connection = "StrOutputQueue")]
+        public string QueueOutput([ActivityTrigger] string message)
         {
-            _blobService = blobService;
+            return message;
         }
-
-        [FunctionName("GetCopyProgress")]
-        public async Task<BlobStatus> GetCopyProgress([ActivityTrigger] string filename,ILogger log)
-        {
-            try
-            {
-                return await _blobService.GetCopyStatus(filename);
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex.Message);
-                throw ex;
-            }
-            
-        }
-
-    }    
+    }
 }

@@ -26,9 +26,10 @@ namespace processor.Model
 {
     public class BlobStatus
     {
-        public CopyStatus CopyStatus { get; internal set; }
-        public string CopyProgress { get; internal set; }
-        public DateTimeOffset CopyCompletedOn { get; internal set; }
-        public long ContentLength { get; internal set; }
+        public CopyStatus CopyStatus { get; set; }
+        public string CopyProgress { get; set; }
+        public DateTimeOffset CopyCompletedOn { get; set; }
+        public long ContentLength { get; set; }
+        public string Filename { get; set; }
     }
 }

@@ -21,6 +21,14 @@ resource storageAccountFunction 'Microsoft.Storage/storageAccounts@2021-04-01' =
   }
 }
 
+resource symbolicname 'Microsoft.Storage/storageAccounts/queueServices/queues@2019-06-01' = {
+  name: 'processed-copy'
+  parent: storageAccountFunction
+  properties: {
+    metadata: {}
+  }
+}
+
 resource storageAccountLogicApp 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: strLogicApp
   location: location

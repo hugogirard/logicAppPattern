@@ -82,34 +82,59 @@ namespace processor.Services
 
                     // Create the destination blob
                     var containerDestinationClient = _instances[KEYS.DESTINATION];
-                    var destinationBlob = containerDestinationClient.GetBlobClient($"{Guid.NewGuid()}");
+                    var destinationFilename = Guid.NewGuid().ToString();
+                    var destinationBlob = containerDestinationClient.GetBlobClient(destinationFilename);
 
-                    var operation = await destinationBlob.StartCopyFromUriAsync(sourceBlob.Uri);
+                    Uri uri = sourceBlob.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,DateTimeOffset.UtcNow.AddHours(1));
+
+                    var operation = await destinationBlob.StartCopyFromUriAsync(uri);
                     BlobProperties destProperties = await destinationBlob.GetPropertiesAsync();
 
                     blobStatus.CopyStatus = destProperties.CopyStatus;
                     blobStatus.CopyProgress = destProperties.CopyProgress;
                     blobStatus.CopyCompletedOn = destProperties.CopyCompletedOn;
-                    blobStatus.ContentLength = destProperties.ContentLength;
+                    blobStatus.ContentLength = destProperties.ContentLength; 
+                    blobStatus.Filename = destinationFilename;                   
                 }
             }
             catch (Exception ex)
             {
+                // Break the lease
+                if (lease != null)
+                {
+                    await lease.BreakAsync();
+                }
                 throw ex;
             }
-            // finally 
-            // {
-            //     // Break the lease if this is the problem
-            //     BlobProperties sourceBlobProperties = await sourceBlob.GetPropertiesAsync();
-            //     if (sourceBlobProperties.LeaseState == LeaseState.Leased && lease != null)
-            //     {
-            //         await lease.BreakAsync();
-            //     }
-            // }
 
             return blobStatus;
+        }
 
+        public async Task<BlobStatus> GetCopyStatus(string filename)
+        {
+            var containerDestinationClient = _instances[KEYS.DESTINATION];
+            var destinationBlob = containerDestinationClient.GetBlobClient(filename);
 
+            BlobProperties destProperties = await destinationBlob.GetPropertiesAsync();
+            var blobStatus = new BlobStatus();
+
+            blobStatus.CopyStatus = destProperties.CopyStatus;
+            blobStatus.CopyProgress = destProperties.CopyProgress;
+            blobStatus.CopyCompletedOn = destProperties.CopyCompletedOn;
+            blobStatus.ContentLength = destProperties.ContentLength; 
+            blobStatus.Filename = filename;  
+
+            return blobStatus;                     
+        }
+
+        public async Task BreakLease(string filename) 
+        {
+             var containerSourceClient = _instances[KEYS.SOURCE];
+             var blob = containerSourceClient.GetBlobClient(filename);
+
+             var lease = blob.GetBlobLeaseClient();
+
+            await lease.BreakAsync();
         }
     }
 }

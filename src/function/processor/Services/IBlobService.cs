@@ -25,5 +25,9 @@ namespace processor.Services
     public interface IBlobService
     {
         Task<BlobStatus> CopyBlobAsync(string filename);
+
+        Task<BlobStatus> GetCopyStatus(string filename);
+
+        Task BreakLease(string filename);
     }
 }

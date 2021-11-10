@@ -27,26 +27,25 @@ using processor.Services;
 
 namespace processor
 {
-    public class GetProgress
+    public class BreakLease
     {
         private readonly IBlobService _blobService;
 
-        public GetProgress(IBlobService blobService)
+        public BreakLease(IBlobService blobService)
         {
             _blobService = blobService;
         }
 
-        [FunctionName("GetCopyProgress")]
-        public async Task<BlobStatus> GetCopyProgress([ActivityTrigger] string filename,ILogger log)
+        [FunctionName("BreakLease")]
+        public async Task ReleaseLease([ActivityTrigger] string filename,ILogger log)
         {
             try
             {
-                return await _blobService.GetCopyStatus(filename);
+                await _blobService.BreakLease(filename);
             }
             catch (Exception ex)
             {
-                log.LogError(ex.Message);
-                throw ex;
+                log.LogError(ex,ex.Message);                
             }
             
         }
