@@ -23,3 +23,5 @@ resource azureDataFactoryConnection 'Microsoft.Web/connections@2016-06-01' = {
     }
   }
 }
+
+output azureDataFactoryEndpointUrl string = reference(azureDataFactoryConnection.id).properties.connectionRuntimeUrl

@@ -64,3 +64,5 @@ module pipeline 'modules/dataFactory/pipeline/copytoblob.bicep' = {
     storageSouceCnxString: storage.outputs.storageSourceCnxString
   }
 }
+
+output azureDataFactoryEndpointUrl string = connections.outputs.azureDataFactoryEndpointUrl
