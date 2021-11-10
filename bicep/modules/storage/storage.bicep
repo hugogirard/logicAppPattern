@@ -22,8 +22,7 @@ resource storageAccountFunction 'Microsoft.Storage/storageAccounts@2021-04-01' =
 }
 
 resource symbolicname 'Microsoft.Storage/storageAccounts/queueServices/queues@2019-06-01' = {
-  name: 'processed-copy'
-  parent: storageAccountFunction
+  name: '${storageAccountFunction.name}/default/processed-copy'
   properties: {
     metadata: {}
   }
