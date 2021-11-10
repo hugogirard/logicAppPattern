@@ -2,30 +2,7 @@
     "definition": {
         "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
         "actions": {
-            "Start_Pipeline_Copy": {
-                "type": "ApiConnection",
-                "inputs": {
-                    "host": {
-                        "connection": {
-                            "referenceName": "azuredatafactory"
-                        }
-                    },
-                    "method": "post",
-                    "body": {
-                        "filename": "@variables('filename')"
-                    },
-                    "path": "/subscriptions/@{encodeURIComponent('abd9e36a-555c-4de4-a75d-cfc1682d67b0')}/resourcegroups/@{encodeURIComponent('rg-logic-app-pattern')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('data-factory-7iswrpc4bjram')}/pipelines/@{encodeURIComponent('CopyPipeline')}/CreateRun",
-                    "queries": {
-                        "x-ms-api-version": "2017-09-01-preview"
-                    }
-                },
-                "runAfter": {
-                    "Initialize_variable": [
-                        "Succeeded"
-                    ]
-                }
-            },
-            "Initialize_variable": {
+            "Initialize_variable_filename": {
                 "type": "InitializeVariable",
                 "inputs": {
                     "variables": [
@@ -37,6 +14,45 @@
                     ]
                 },
                 "runAfter": {}
+            },
+            "Condition": {
+                "type": "If",
+                "expression": {
+                    "and": [
+                        {
+                            "equals": [
+                                "@triggerBody()?['operation']",
+                                "function"
+                            ]
+                        }
+                    ]
+                },
+                "actions": {},
+                "runAfter": {
+                    "Initialize_variable_filename": [
+                        "Succeeded"
+                    ]
+                },
+                "else": {
+                    "actions": {
+                        "Create_a_pipeline_run": {
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "referenceName": "azuredatafactory"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/subscriptions/@{encodeURIComponent('abd9e36a-555c-4de4-a75d-cfc1682d67b0')}/resourcegroups/@{encodeURIComponent('rg-logic-app-pattern')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('data-factory-7iswrpc4bjram')}/pipelines/@{encodeURIComponent('CopyPipeline')}/CreateRun",
+                                "queries": {
+                                    "x-ms-api-version": "2017-09-01-preview"
+                                }
+                            },
+                            "runAfter": {}
+                        }
+                    }
+                }
             }
         },
         "triggers": {
@@ -48,6 +64,9 @@
                         "type": "object",
                         "properties": {
                             "filename": {
+                                "type": "string"
+                            },
+                            "operation": {
                                 "type": "string"
                             }
                         }
