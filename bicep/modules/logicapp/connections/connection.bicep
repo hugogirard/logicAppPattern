@@ -12,6 +12,7 @@ param logicAppSystemAssingedIdentityObjecId string
 resource azureDataFactoryConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: 'azureDataFactorADOConnection'
   location: location
+  kind: 'V2'
   properties: {
     displayName: 'azureDataFactoryConnector'
     api: {
