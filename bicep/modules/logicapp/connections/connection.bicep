@@ -5,6 +5,8 @@ param clientId string
 @secure()
 param clientSecret string
 
+param logicAppSystemAssingedIdentityObjecId string
+
 // https://docs.microsoft.com/en-us/azure/logic-apps/set-up-devops-deployment-single-tenant-azure-logic-apps?tabs=github
 
 resource azureDataFactoryConnection 'Microsoft.Web/connections@2016-06-01' = {
@@ -24,4 +26,18 @@ resource azureDataFactoryConnection 'Microsoft.Web/connections@2016-06-01' = {
   }
 }
 
-output azureDataFactoryEndpointUrl string = reference(azureDataFactoryConnection.id).properties.connectionRuntimeUrl
+resource accessPolicies 'Microsoft.Web/connections/accessPolicies@2016-06-01' = {
+  name: '${azureDataFactoryConnection.name}/${logicAppSystemAssingedIdentityObjecId}'
+  location: location
+  properties: {    
+    principal: {
+      type: 'ActiveDirectory'
+      identity: {
+        tenantId: subscription().tenantId
+        objectId: logicAppSystemAssingedIdentityObjecId
+      }
+    }
+  }
+}
+
+//output azureDataFactoryEndpointUrl string = reference(azureDataFactoryConnection.id).properties.connectionRuntimeUrl

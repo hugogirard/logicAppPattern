@@ -17,7 +17,10 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
   name: 'logic-app-${suffix}'
   location: location
   kind: 'functionapp,workflowapp'
-  properties: {
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {    
     siteConfig: {
       appSettings: [
         {
@@ -70,3 +73,5 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
     clientAffinityEnabled: false
   }
 }
+
+output logicAppSystemAssingedIdentityObjecId string = logiapp.identity.principalId

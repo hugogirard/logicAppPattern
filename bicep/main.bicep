@@ -65,4 +65,4 @@ module pipeline 'modules/dataFactory/pipeline/copytoblob.bicep' = {
   }
 }
 
-output azureDataFactoryEndpointUrl string = connections.outputs.azureDataFactoryEndpointUrl
+//output azureDataFactoryEndpointUrl string = connections.outputs.azureDataFactoryEndpointUrl
