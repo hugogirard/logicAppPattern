@@ -13,7 +13,7 @@ resource azureDataFactoryConnection 'Microsoft.Web/connections@2016-06-01' = {
   properties: {
     displayName: 'azureDataFactoryConnector'
     api: {
-      id: '/subscriptions/${subscription().id}/providers/Microsoft.Web/locations/${location}/managedApis/azuredatafactory'
+      id: '/subscriptions/${subscription().subscriptionId}/providers/Microsoft.Web/locations/${location}/managedApis/azuredatafactory'
     }
     parameterValues: {
       'token:clientId': clientId
