@@ -54,8 +54,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      - AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH: 'src/function/processor'
-      - AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
+      AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH: 'src/function/processor'
+      AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
 
     steps:
 
