@@ -86,3 +86,7 @@ module function 'modules/functions/functions.bicep' = {
     storageSourceCnxString: storage.outputs.storageSourceCnxString
   }
 }
+
+output functionProcessorName string = function.outputs.functionProcessorName
+output functionDispatcherName string = function.outputs.functionDispatcherName
+output logicAppName string = logicapp.outputs.logicAppName

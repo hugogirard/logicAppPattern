@@ -75,3 +75,4 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
 }
 
 output logicAppSystemAssingedIdentityObjecId string = logiapp.identity.principalId
+output logicAppName string = logiapp.name

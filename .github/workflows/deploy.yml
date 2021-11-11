@@ -15,6 +15,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    outputs:      
+      functionProcessorName: ${{ steps.armDeployment.outputs.functionProcessorName }}
+      functionDispatcherName: ${{ steps.armDeployment.outputs.functionDispatcherName }}      
+
     steps:
       
       - uses: actions/checkout@v2
@@ -42,3 +46,55 @@ jobs:
           resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
           template: ./bicep/main.json
           parameters: location=${{ env.LOCATION }} clientId=${{ secrets.SP_CLIENT_ID }} clientSecret=${{ secrets.SP_CLIENT_SECRET }}
+
+  deploy-function:
+    
+    needs: create-azure-resources
+
+    runs-on: ubuntu-latest
+
+    env:
+      - AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH: 'src/function/processor'
+      - AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+      - name: Setup DotNet 3.1.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'    
+
+      - name: 'Building Processor'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Building Dispatcher'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd          
+
+      - name: 'Deploy Functions Processor'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ needs.create-azure-resources.outputs.functionProcessorName }}
+          package: '${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}/output'
+
+      - name: 'Deploy Functions Dispatcher'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ needs.create-azure-resources.outputs.functionDispatcherName }}
+          package: '${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}/output'                   

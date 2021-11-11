@@ -139,3 +139,6 @@ resource fnDispatcher 'Microsoft.Web/sites@2018-11-01' = {
     }
   }
 }
+
+output functionProcessorName string = fnProcessor.name
+output functionDispatcherName string = fnDispatcher.name
