@@ -135,7 +135,7 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: logic
-          path: .src/logicApp/build-art/     
+          path: ./build-art/    
           
       - name: 'Deploy Functions Dispatcher'
         uses: Azure/functions-action@v1
