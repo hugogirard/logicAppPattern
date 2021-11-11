@@ -14,8 +14,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01'
           image: image
           ports: [
             {
-              port: 1025
+              port: 80
               protocol: 'TCP'
+            }
+            {
+              port: 1025
+              protocol: 'TCP'              
             }
           ]
           resources: {
@@ -35,6 +39,10 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01'
           port: 80
           protocol: 'TCP'
         }
+        {
+          port: 1025
+          protocol: 'TCP'              
+        }        
       ]
     }
   }
