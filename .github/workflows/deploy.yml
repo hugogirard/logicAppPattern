@@ -87,14 +87,12 @@ jobs:
 
       - name: 'Deploy Functions Processor'
         uses: Azure/functions-action@v1
-        id: fa
         with:
           app-name: ${{ needs.create-azure-resources.outputs.functionProcessorName }}
           package: '${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}/output'
 
       - name: 'Deploy Functions Dispatcher'
         uses: Azure/functions-action@v1
-        id: fa
         with:
           app-name: ${{ needs.create-azure-resources.outputs.functionDispatcherName }}
           package: '${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}/output'                   
