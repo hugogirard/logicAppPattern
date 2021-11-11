@@ -13,8 +13,8 @@ resource processorPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   }
 }
 
-resource emailPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
-  name: 'plan-email-${suffix}'
+resource dispatcherPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
+  name: 'plan-dispatcher-${suffix}'
   location: location
   sku: {
     tier: 'Dynamic'
@@ -68,12 +68,12 @@ resource fnProcessor 'Microsoft.Web/sites@2018-11-01' = {
 }
 
 
-resource fnEmail 'Microsoft.Web/sites@2018-11-01' = {
-  name: 'email-${suffix}'
+resource fnDispatcher 'Microsoft.Web/sites@2018-11-01' = {
+  name: 'fnDispatcher-${suffix}'
   location: location
   kind: 'functionapp'
   properties: {
-    serverFarmId: emailPlan.id
+    serverFarmId: dispatcherPlan.id
     siteConfig: {
       appSettings: [
         {

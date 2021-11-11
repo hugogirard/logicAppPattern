@@ -74,14 +74,6 @@ module monitoring 'modules/monitoring/monitoring.bicep' = {
   }
 }
 
-module aci 'modules/aci/aci.bicep' = {
-  name: 'aci'
-  params: {
-    location: location
-    suffix: suffix
-  }
-}
-
 module function 'modules/functions/functions.bicep' = {
   name: 'function'
   params: {
@@ -92,5 +84,3 @@ module function 'modules/functions/functions.bicep' = {
     suffix: suffix
   }
 }
-
-//output azureDataFactoryEndpointUrl string = connections.outputs.azureDataFactoryEndpointUrl
