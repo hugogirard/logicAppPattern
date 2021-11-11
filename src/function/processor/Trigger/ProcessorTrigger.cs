@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using processor.Model;
 
 namespace processor
 {
@@ -50,7 +51,12 @@ namespace processor
 
             log.LogInformation($"Processing file: {filename}");
 
-            string instanceId = await client.StartNewAsync<string>("ProcessorOrchestrator", filename);
+            var input = new OrchestrationInput()
+            {
+                SourceFileName = filename
+            };
+
+            string instanceId = await client.StartNewAsync<string>("ProcessorOrchestrator", JsonConvert.SerializeObject(input));
 
             return client.CreateCheckStatusResponse(req, instanceId);
         }

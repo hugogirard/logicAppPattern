@@ -2,10 +2,10 @@
   "managedApiConnections": {
     "azuredatafactory": {
       "api": {
-        "id": "/subscriptions/abd9e36a-555c-4de4-a75d-cfc1682d67b0/providers/Microsoft.Web/locations/eastus/managedApis/azuredatafactory"
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/providers/Microsoft.Web/locations/eastus/managedApis/azuredatafactory"
       },
       "connection": {
-        "id": "/subscriptions/abd9e36a-555c-4de4-a75d-cfc1682d67b0/resourceGroups/rg-logic-app-pattern/providers/Microsoft.Web/connections/azureDataFactorADOConnection"
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/resourceGroups/rg-logic-app-pattern/providers/Microsoft.Web/connections/azureDataFactorADOConnection"
       },
       "connectionRuntimeUrl": "https://ee283397ffc88335.09.common.logic-eastus.azure-apihub.net/apim/azuredatafactory/c37dabffe7ef449881a08a1d040f6320/",
       "authentication": {

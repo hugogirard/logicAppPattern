@@ -66,4 +66,31 @@ module pipeline 'modules/dataFactory/pipeline/copytoblob.bicep' = {
   }
 }
 
+module monitoring 'modules/monitoring/monitoring.bicep' = {
+  name: 'monitoring'
+  params: {
+    location: location
+    suffix: suffix
+  }
+}
+
+module aci 'modules/aci/aci.bicep' = {
+  name: 'aci'
+  params: {
+    location: location
+    suffix: suffix
+  }
+}
+
+module function 'modules/functions/functions.bicep' = {
+  name: 'function'
+  params: {
+    insightCnxString: monitoring.outputs.insightCnxString
+    insightKey: monitoring.outputs.insightKey
+    location: location
+    storageCnxString: storage.outputs.storageLogicAppCnxString
+    suffix: suffix
+  }
+}
+
 //output azureDataFactoryEndpointUrl string = connections.outputs.azureDataFactoryEndpointUrl

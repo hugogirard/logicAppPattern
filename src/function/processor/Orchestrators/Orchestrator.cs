@@ -27,49 +27,71 @@ using System.Threading.Tasks;
 using processor.Model;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace processor
 {    
     public class Orchestrator
     {
+        const string COPY = "COPY";
+        const string PULLING = "PULLING";
+
         [FunctionName("ProcessorOrchestrator")]
         public async Task RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
-            string filename = context.GetInput<string>();
+            var serializedInput = context.GetInput<string>();
+            var parameters = JsonConvert.DeserializeObject<OrchestrationInput>(serializedInput);
+
+            if (string.IsNullOrEmpty(parameters.Mode)) 
+            {
+                parameters.Mode = COPY;
+            }
+
+            if (parameters.WaitingTime == 0)
+                parameters.WaitingTime = 1;
 
             try
             {
-                BlobStatus status = await context.CallActivityAsync<BlobStatus>("StartCopy", filename);
-                
-                bool getResult = false;
-                int waitingTime = -1;                           
-                string message = string.Empty;
-                do
+
+                if (parameters.Mode == COPY)
                 {
-                    if (waitingTime >= 9)
-                    {
-                        waitingTime = 10;
-                    }
-                    else 
-                    {
-                        waitingTime += 2;
-                    }
-                                    
+                    BlobStatus status = await context.CallActivityAsync<BlobStatus>("StartCopy", parameters.SourceFileName);
+                    parameters.Mode = PULLING;
+                    parameters.WaitingTime = 3;
+                    parameters.DestinationFileName = status.Filename;
+                    DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromSeconds(15));
+                    await context.CreateTimer(deadline,CancellationToken.None);
+                    context.ContinueAsNew(JsonConvert.SerializeObject(parameters));
+                }
+                else 
+                {
+                    var status = await context.CallActivityAsync<BlobStatus>("GetCopyProgress", parameters.DestinationFileName);
+                    string message = string.Empty;
+                    bool getResult = false;
                     switch (status.CopyStatus)
                     {
                         case CopyStatus.Pending:
-                            DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromMinutes(waitingTime));
+                            DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromMinutes(parameters.WaitingTime));
                             await context.CreateTimer(deadline,CancellationToken.None);
-                            status = await context.CallActivityAsync<BlobStatus>("GetCopyProgress", status.Filename);
+
+                            if (parameters.WaitingTime < 10) 
+                            {
+                                parameters.WaitingTime += 2;
+                            }
+                            else 
+                            {
+                                parameters.WaitingTime = 10;
+                            }
+                            context.ContinueAsNew(JsonConvert.SerializeObject(parameters));
                             break;
                         case CopyStatus.Success:
                             // Send result in storage queue
-                            message = $"Copy of file {filename} success with name {status.Filename}.  Completed on: ${status.CopyCompletedOn}";
+                            message = $"Copy of file {parameters.SourceFileName} success with name {status.Filename}.  Completed on: ${status.CopyCompletedOn}";
                             getResult = true;
                             break;
                         default:
                             // Send result in storage queue
-                            message = $"Copy of file {filename} failed with status {status.CopyStatus}.";
+                            message = $"Copy of file {parameters.SourceFileName} failed with status {status.CopyStatus}.";
                             getResult = true;
                             break;
                     }
@@ -77,22 +99,19 @@ namespace processor
                     if (getResult)
                     {
                         // Call activity to add in queue here 
-                        await context.CallActivityAsync("QueueOutput", message);                       
-                    }
+                        await context.CallActivityAsync("QueueOutput", message); 
+                        await context.CallActivityAsync("BreakLease", parameters.SourceFileName);                      
+                    }                    
                 }
-                while (!getResult);                 
+                                            
             }
             catch (Exception ex)
             {
 
                 log.LogError(ex,ex.Message);
+                await context.CallActivityAsync("BreakLease", parameters.SourceFileName);
                 throw;
             }
-            finally 
-            {
-                await context.CallActivityAsync("BreakLease", filename);
-            }
-
 
         }
     }
