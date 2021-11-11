@@ -45,7 +45,7 @@ module connections 'modules/logicapp/connections/connection.bicep' = {
     clientId: clientId
     clientSecret: clientSecret
     location: location
-    logicAppSystemAssingedIdentityObjecId: logicapp.outputs.logicAppSystemAssingedIdentityObjecId
+    logicAppSystemAssingedIdentityObjecId: logicapp.outputs.logicAppSystemAssingedIdentityObjecId    
   }
 }
 
@@ -82,5 +82,7 @@ module function 'modules/functions/functions.bicep' = {
     location: location
     storageCnxString: storage.outputs.storageLogicAppCnxString
     suffix: suffix
+    storageDestCnxString: storage.outputs.storageDestinationCnxString
+    storageSourceCnxString: storage.outputs.storageSourceCnxString
   }
 }
