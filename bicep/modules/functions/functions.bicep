@@ -4,6 +4,9 @@ param insightCnxString string
 param insightKey string
 param storageCnxString string
 
+param storageSourceCnxString string
+param storageDestCnxString string
+
 resource processorPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: 'plan-processor-${suffix}'
   location: location
@@ -61,7 +64,27 @@ resource fnProcessor 'Microsoft.Web/sites@2018-11-01' = {
         {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'processorapp092'
-        }              
+        }
+        {
+          name: 'ConfigurationSettings:SourceStorageCnxString'
+          value: storageSourceCnxString
+        }
+        {
+          name: 'ConfigurationSettings:SourceStorageContainer'
+          value: 'documents'
+        }
+        {
+          name: 'ConfigurationSettings:TargetStorageCnxString'
+          value: storageDestCnxString
+        }
+        {
+          name: 'ConfigurationSettings:TargetStorageContainer'
+          value: 'documents'
+        }
+        {
+          name: 'StrOutputQueue'
+          value: storageCnxString
+        }
       ]
     }
   }
@@ -107,7 +130,11 @@ resource fnDispatcher 'Microsoft.Web/sites@2018-11-01' = {
         {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'processorapp092'
-        }              
+        }
+        {
+          name: 'StrOutputQueue'
+          value: storageCnxString
+        }                      
       ]
     }
   }
