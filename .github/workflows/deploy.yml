@@ -169,8 +169,8 @@ jobs:
         with:
           inlineScript: |
             $profile = Get-AzWebAppPublishingProfile `
-                -ResourceGroupName ${{ needs.create-azure-resources.outputs.logicAppName }} `
-                -Name ${{ env.RESOURCE_GROUP_NAME }}
+                -ResourceGroupName ${{ env.RESOURCE_GROUP_NAME }} `
+                -Name ${{ needs.create-azure-resources.outputs.logicAppName  }}
             $profile = $profile.Replace("`r", "").Replace("`n", "")
             Write-Output "::set-output name=profile::$profile"
           azPSVersion: latest
@@ -180,4 +180,4 @@ jobs:
         with:
           app-name: ${{ needs.create-azure-resources.outputs.logicAppName  }}
           package: './build-art/logic.zip'
-          publish-profile: ${{steps.publishprofile.outputs.profile}}        
+          publish-profile: ${{steps.publishprofile.outputs.profile}}
