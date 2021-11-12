@@ -114,7 +114,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: logic
-        path: .src/logicApp/build-art/
+        path: ./build-art/
         retention-days: 1    
         
   logic-app-deploy:
