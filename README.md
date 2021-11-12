@@ -4,4 +4,7 @@ The use case of this Github is to illustrate two design patterns (integration) t
 
 The first solution is the code less optimum approach, this leverage Azure Logic App and Azure Data Factory.
 
-The second option is the **hard way**, leveraging Azure Durable Function.  Even if the second option works without problem you will see the first option is easier to maintain because mostly no codes need to be done.
+The second option is the **hard way**, leveraging Azure Durable Function.  Even if the second option works a without problem you will see the first option is easier to maintain because mostly no codes need to be done.
+
+# Architecture diagram
+

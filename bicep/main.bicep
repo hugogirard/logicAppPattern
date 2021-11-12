@@ -31,8 +31,8 @@ module logging 'modules/logging/insight.bicep' = {
 module logicapp 'modules/logicapp/logic.bicep' = {
   name: 'logicapp'
   params: {
-    appInsightCnxString: logging.outputs.appInsightCnxString
-    appInsightKey: logging.outputs.appInsightKey
+    appInsightCnxString: monitoring.outputs.insightCnxString
+    appInsightKey: monitoring.outputs.insightKey
     location: location
     strCnxString: storage.outputs.storageLogicAppCnxString
     suffix: suffix
