@@ -113,14 +113,11 @@ jobs:
     - run: ls src/logicApp
       name: directory logicApp
 
-    - run: ls
-      name: directory logicApp
-
     - name: Upload app zip package
       uses: actions/upload-artifact@v2
       with:
         name: logic
-        path: ./build-art/
+        path: .src/logicApp/build-art/
         retention-days: 1    
             
   # logic-app-deploy:
