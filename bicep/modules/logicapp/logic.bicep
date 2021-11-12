@@ -11,6 +11,7 @@ resource webFarm 'Microsoft.Web/serverfarms@2021-02-01' = {
     tier: 'WorkflowStandard'
     name: 'WS1'
   }
+  kind: 'windows'
 }
 
 resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
@@ -22,6 +23,7 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
   }
   properties: {    
     siteConfig: {
+      netFrameworkVersion: 'v4.6'
       appSettings: [
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -30,6 +32,18 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'node'
+        }
+        {
+          name: 'FUNCTIONS_V2_COMPATIBILITY_MODE'
+          value: 'true'
+        }     
+        {
+          name: 'WORKFLOWS_SUBSCRIPTION_ID'
+          value: subscription().subscriptionId
+        }
+        {
+          name: 'WORKFLOWS_LOCATION_NAME'
+          value: location
         }
         {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
