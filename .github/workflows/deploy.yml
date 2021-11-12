@@ -84,41 +84,41 @@ jobs:
           app-name: ${{ needs.create-azure-resources.outputs.functionProcessorName }}
           package: '${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}/output'
               
-  # deploy-function-dispatcher:
+  deploy-function-dispatcher:
     
-  #   needs: create-azure-resources
+    needs: create-azure-resources
 
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   env:      
-  #     AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
+    env:      
+      AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
 
-  #   steps:
+    steps:
 
-  #     - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-  #     - name: Azure Login
-  #       uses: Azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.AZURE_CREDENTIAL }}  
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIAL }}  
 
-  #     - name: Setup DotNet 3.1.X Environment
-  #       uses: actions/setup-dotnet@v1
-  #       with:
-  #         dotnet-version: '3.1.x'    
+      - name: Setup DotNet 3.1.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'    
 
-  #     - name: 'Building Dispatcher'
-  #       shell: bash
-  #       run: |
-  #         pushd './${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}'
-  #         dotnet build --configuration Release --output ./output
-  #         popd          
+      - name: 'Building Dispatcher'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd          
 
-  #     - name: 'Deploy Functions Dispatcher'
-  #       uses: Azure/functions-action@v1
-  #       with:
-  #         app-name: ${{ needs.create-azure-resources.outputs.functionDispatcherName }}
-  #         package: '${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}/output'   
+      - name: 'Deploy Functions Dispatcher'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ needs.create-azure-resources.outputs.functionDispatcherName }}
+          package: '${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}/output'   
 
   logic-app-build:
     
