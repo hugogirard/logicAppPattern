@@ -108,7 +108,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Package logic
-      run: (cd src/logicApp; mkdir -p ../build-art; zip -r ../build-art/logic.zip .)
+      run: (cd src/logicApp; mkdir -p build-art; zip -r build-art/logic.zip .)
 
     - run: ls src/logicApp
       name: directory logicApp
