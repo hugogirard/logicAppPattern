@@ -80,7 +80,5 @@ module function 'modules/functions/functions.bicep' = {
 }
 
 output functionProcessorName string = function.outputs.functionProcessorName
-output functionDispatcherName string = function.outputs.functionDispatcherName
 output logicAppName string = logicapp.outputs.logicAppName
 output functionProcessorHostName string = function.outputs.functionProcessorHostName
-output functionDispatcherHostName string = function.outputs.functionDispatcherHostName

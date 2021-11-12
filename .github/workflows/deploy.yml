@@ -16,8 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:      
-      functionProcessorName: ${{ steps.armDeployment.outputs.functionProcessorName }}
-      functionDispatcherName: ${{ steps.armDeployment.outputs.functionDispatcherName }}
+      functionProcessorName: ${{ steps.armDeployment.outputs.functionProcessorName }}      
       logicAppName: ${{ steps.armDeployment.outputs.logicAppName }}
 
     steps:
@@ -83,3 +82,4 @@ jobs:
         with:
           app-name: ${{ needs.create-azure-resources.outputs.functionProcessorName }}
           package: '${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}/output'           
+
