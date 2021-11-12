@@ -9,7 +9,8 @@ resource dataFactory 'Microsoft.DataFactory/factories@2018-06-01' = {
   identity: {
     type: 'SystemAssigned'
   }
-  properties: {}
+  properties: {    
+  }
 }
 
 output dataFactoryName string = dataFactory.name

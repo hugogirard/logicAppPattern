@@ -19,6 +19,7 @@
 */
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using Microsoft.Extensions.Logging;
 
 namespace processor.Activities
 {
@@ -26,8 +27,9 @@ namespace processor.Activities
     {
         [FunctionName("QueueOutput")]
         [return: Queue("processed-copy", Connection = "StrOutputQueue")]
-        public string QueueOutput([ActivityTrigger] string message)
+        public string QueueOutput([ActivityTrigger] string message, ILogger log)
         {
+            log.LogInformation($"Sending message {message}");
             return message;
         }
     }

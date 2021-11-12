@@ -6,6 +6,6 @@
                 "isEnabled": true,
                 "excludedTypes": "Request"
             }
-        }
+        }     
     }
 }

@@ -58,6 +58,8 @@ namespace processor
 
             string instanceId = await client.StartNewAsync<string>("ProcessorOrchestrator", JsonConvert.SerializeObject(input));
 
+            log.LogInformation($"Orchestrator instance {instanceId} started");
+
             return client.CreateCheckStatusResponse(req, instanceId);
         }
     }

@@ -41,7 +41,7 @@ namespace processor
         {
             var serializedInput = context.GetInput<string>();
             var parameters = JsonConvert.DeserializeObject<OrchestrationInput>(serializedInput);
-
+            
             if (string.IsNullOrEmpty(parameters.Mode)) 
             {
                 parameters.Mode = COPY;
@@ -55,22 +55,31 @@ namespace processor
 
                 if (parameters.Mode == COPY)
                 {
+                    log.LogInformation($"Starting copy of file {parameters.SourceFileName}");
+                    
                     BlobStatus status = await context.CallActivityAsync<BlobStatus>("StartCopy", parameters.SourceFileName);
                     parameters.Mode = PULLING;
                     parameters.WaitingTime = 3;
                     parameters.DestinationFileName = status.Filename;
+                    
+                    log.LogInformation($"Filename in destination storage {status.Filename}");
+
                     DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromSeconds(15));
                     await context.CreateTimer(deadline,CancellationToken.None);
                     context.ContinueAsNew(JsonConvert.SerializeObject(parameters));
                 }
                 else 
                 {
+                    log.LogInformation($"Pulling result of copied file ${parameters.SourceFileName}");
                     var status = await context.CallActivityAsync<BlobStatus>("GetCopyProgress", parameters.DestinationFileName);
                     string message = string.Empty;
                     bool getResult = false;
                     switch (status.CopyStatus)
                     {
                         case CopyStatus.Pending:
+                            
+                            log.LogInformation($"File {parameters.DestinationFileName} still in pending copy state");
+
                             DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromMinutes(parameters.WaitingTime));
                             await context.CreateTimer(deadline,CancellationToken.None);
 
@@ -85,11 +94,17 @@ namespace processor
                             context.ContinueAsNew(JsonConvert.SerializeObject(parameters));
                             break;
                         case CopyStatus.Success:
+
+                            log.LogInformation($"File {parameters.DestinationFileName} successfully copied");
+
                             // Send result in storage queue
                             message = $"Copy of file {parameters.SourceFileName} success with name {status.Filename}.  Completed on: ${status.CopyCompletedOn}";
                             getResult = true;
                             break;
                         default:
+                            
+                            log.LogError($"Copy failed for file {parameters.DestinationFileName} with status {status.CopyStatus}");
+                            
                             // Send result in storage queue
                             message = $"Copy of file {parameters.SourceFileName} failed with status {status.CopyStatus}.";
                             getResult = true;
@@ -98,6 +113,7 @@ namespace processor
 
                     if (getResult)
                     {
+                        log.LogInformation($"Sending message to queue");
                         // Call activity to add in queue here 
                         await context.CallActivityAsync("QueueOutput", message); 
                         await context.CallActivityAsync("BreakLease", parameters.SourceFileName);                      
