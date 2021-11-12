@@ -143,4 +143,6 @@ resource fnDispatcher 'Microsoft.Web/sites@2018-11-01' = {
 output functionProcessorName string = fnProcessor.name
 output functionDispatcherName string = fnDispatcher.name
 output functionProcessorHostName string = 'https://${fnProcessor.properties.hostNames[0]}'
+//output functionProcessorKey string = listsecrets(resourceId('Microsoft.Web/sites/functions','DispatchCopyRun',fnProcessor.apiVersion),fnProcessor.name).default
+
 output functionDispatcherHostName string = 'https://${fnDispatcher.properties.hostNames[0]}'

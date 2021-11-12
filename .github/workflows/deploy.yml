@@ -48,55 +48,77 @@ jobs:
           template: ./bicep/main.json
           parameters: location=${{ env.LOCATION }} clientId=${{ secrets.SP_CLIENT_ID }} clientSecret=${{ secrets.SP_CLIENT_SECRET }}
 
-  # deploy-function:
+  deploy-function-processor:
     
-  #   needs: create-azure-resources
+    needs: create-azure-resources
 
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   env:
-  #     AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH: 'src/function/processor'
-  #     AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
+    env:
+      AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH: 'src/function/processor'
+      
+    steps:
 
-  #   steps:
+      - uses: actions/checkout@v2
 
-  #     - uses: actions/checkout@v2
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIAL }}  
 
-  #     - name: Azure Login
-  #       uses: Azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.AZURE_CREDENTIAL }}  
+      - name: Setup DotNet 3.1.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'    
 
-  #     - name: Setup DotNet 3.1.X Environment
-  #       uses: actions/setup-dotnet@v1
-  #       with:
-  #         dotnet-version: '3.1.x'    
+      - name: 'Building Processor'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd
 
-  #     - name: 'Building Processor'
-  #       shell: bash
-  #       run: |
-  #         pushd './${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}'
-  #         dotnet build --configuration Release --output ./output
-  #         popd
+      - name: 'Deploy Functions Processor'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ needs.create-azure-resources.outputs.functionProcessorName }}
+          package: '${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}/output'
+              
+  deploy-function-dispatcher:
+    
+    needs: create-azure-resources
 
-  #     - name: 'Building Dispatcher'
-  #       shell: bash
-  #       run: |
-  #         pushd './${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}'
-  #         dotnet build --configuration Release --output ./output
-  #         popd          
+    runs-on: ubuntu-latest
 
-  #     - name: 'Deploy Functions Processor'
-  #       uses: Azure/functions-action@v1
-  #       with:
-  #         app-name: ${{ needs.create-azure-resources.outputs.functionProcessorName }}
-  #         package: '${{ env.AZURE_WEBAPP_PROCESSOR_PACKAGE_PATH }}/output'
+    env:      
+      AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH: 'src/function/dispatcher'
 
-  #     - name: 'Deploy Functions Dispatcher'
-  #       uses: Azure/functions-action@v1
-  #       with:
-  #         app-name: ${{ needs.create-azure-resources.outputs.functionDispatcherName }}
-  #         package: '${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}/output'                   
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIAL }}  
+
+      - name: Setup DotNet 3.1.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'    
+
+      - name: 'Building Dispatcher'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd          
+
+      - name: 'Deploy Functions Dispatcher'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ needs.create-azure-resources.outputs.functionDispatcherName }}
+          package: '${{ env.AZURE_WEBAPP_DISPATCHER_PACKAGE_PATH }}/output'   
 
   logic-app-build:
     
