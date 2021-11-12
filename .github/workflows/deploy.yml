@@ -108,16 +108,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Package logic
-      run: (cd src/logicApp; mkdir -p build-art; zip -r build-art/logic.zip .)
+      run: (cd src/logicApp; mkdir -p ../../build-art; zip -r ../../build-art/logic.zip .)
 
-    - run: ls src/logicApp
+    - run: ls
       name: directory logicApp
 
     - name: Upload app zip package
       uses: actions/upload-artifact@v2
       with:
         name: logic
-        path: .src/logicApp/build-art/
+        path: ./build-art/
         retention-days: 1    
             
   # logic-app-deploy:
