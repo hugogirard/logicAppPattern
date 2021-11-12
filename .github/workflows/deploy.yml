@@ -163,21 +163,8 @@ jobs:
           name: logic
           path: ./build-art/    
 
-      - name: Get publish Profile
-        id: publishprofile
-        uses: azure/powershell@v1
-        with:
-          inlineScript: |
-            $profile = Get-AzWebAppPublishingProfile `
-                -ResourceGroupName ${{ env.RESOURCE_GROUP_NAME }} `
-                -Name ${{ needs.create-azure-resources.outputs.logicAppName  }}
-            $profile = $profile.Replace("`r", "").Replace("`n", "")
-            Write-Output "::set-output name=profile::$profile"
-          azPSVersion: latest
-
       - name: 'Deploy Functions Dispatcher'
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ needs.create-azure-resources.outputs.logicAppName  }}
           package: './build-art/logic.zip'
-          publish-profile: ${{steps.publishprofile.outputs.profile}}
