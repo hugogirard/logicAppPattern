@@ -81,7 +81,7 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
         }
         {
           name: 'WEBSITE_CONTENTSHARE'
-          value: logicName
+          value: 'logicapp98'
         }
       ]
       use32BitWorkerProcess: true
