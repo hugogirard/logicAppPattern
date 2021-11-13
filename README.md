@@ -181,3 +181,12 @@ Now, go to the Azure Portal, and click the Azure Data Factory, click the button 
 
 You can now goes to the Azure Storage wit the tag **description: Document Destination Storage** and you will see in the container folder your new document.
 
+## Call the durable function
+
+Repeat the step 8 but for the **operation** parameter use the value **function**.
+
+Now to validate the Azure Function was called and completed succesfully go to the processor function in the resource group.
+
+From there click functions and select the **ProcessorTrigger**, click monitoring and you will see all execution of the Azure Function.
+
+![architecture](https://raw.githubusercontent.com/hugogirard/logicAppPattern/main/pictures/runfunction.png).

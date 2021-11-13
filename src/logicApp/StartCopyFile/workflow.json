@@ -37,6 +37,7 @@
                                 "filename": "@variables('filename')"
                             }
                         },
+                        "operationOptions": "DisableAsyncPattern",
                         "runAfter": {}
                     }
                 },
