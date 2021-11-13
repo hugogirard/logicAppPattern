@@ -44,6 +44,29 @@
                     "Initialize_variable_filename": [
                         "Succeeded"
                     ]
+                },
+                "else": {
+                    "actions": {
+                        "Create_a_pipeline_run": {
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "referenceName": "azuredatafactory"
+                                    }
+                                },
+                                "method": "post",
+                                "body": {
+                                    "filename": "@variables('filename')"
+                                },
+                                "path": "/subscriptions/@{encodeURIComponent('abd9e36a-555c-4de4-a75d-cfc1682d67b0')}/resourcegroups/@{encodeURIComponent('rg-logic-app-pattern')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('data-factory-7iswrpc4bjram')}/pipelines/@{encodeURIComponent('CopyPipeline')}/CreateRun",
+                                "queries": {
+                                    "x-ms-api-version": "2017-09-01-preview"
+                                }
+                            },
+                            "runAfter": {}
+                        }
+                    }
                 }
             }
         },
