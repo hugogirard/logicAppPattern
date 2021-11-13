@@ -146,3 +146,38 @@ By default this program generate a 1GB file but you can change the **const varia
 
 Upload the large file in the storage.
 
+## Step 8 - Run the Logic App
+
+Now, go to the logic app created in the resource group, click on the left menu on the **Workflows** button.  You will see one workflow called **StartCopyFile**, click on it.
+
+Copy the workflow URL.
+
+![architecture](https://raw.githubusercontent.com/hugogirard/logicAppPattern/main/pictures/wrkurl.png).
+
+Now you need to do a POST call, you can use a tool like Postman.
+
+In this example we use postman, the call will look like this.
+
+![architecture](https://raw.githubusercontent.com/hugogirard/logicAppPattern/main/pictures/postman.png).
+
+What is important here are the two parameters in the body.
+
+| Parameter | Description
+| --------- | -----------
+| filename  | The name of the file copied in the Azure Storage
+| operation | Here the value can be function or factory
+
+For the operation the function value will call the azure function and factory will call Azure Data Factory.
+
+**For now, the logic doesn't take care of the extension of the file, the copied file will always have the .txt extension**
+
+You can POST the request, if everything is setup correctly you should receive a 202 Accepted code
+
+## Validate the run in Azure Data Factory
+
+Now, go to the Azure Portal, and click the Azure Data Factory, click the button **Open Azure Data Factory Studio**. Click on the left menu the button Monitor and you should see you execution succesfully.
+
+![architecture](https://raw.githubusercontent.com/hugogirard/logicAppPattern/main/pictures/facrun.png).
+
+You can now goes to the Azure Storage wit the tag **description: Document Destination Storage** and you will see in the container folder your new document.
+
