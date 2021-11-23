@@ -7,6 +7,10 @@ param storageCnxString string
 param storageSourceCnxString string
 param storageDestCnxString string
 
+var functioNName = ''
+
+var functionKey = listkeys(resourceId('Microsoft.Web/sites/functions',fnProcessor.name,''),fnProcessor.apiVersion).default
+
 resource processorPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: 'plan-processor-${suffix}'
   location: location
@@ -83,3 +87,4 @@ resource fnProcessor 'Microsoft.Web/sites@2018-11-01' = {
 
 output functionProcessorName string = fnProcessor.name
 output functionProcessorHostName string = 'https://${fnProcessor.properties.hostNames[0]}'
+

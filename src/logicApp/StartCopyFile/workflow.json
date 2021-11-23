@@ -58,9 +58,9 @@
                                 },
                                 "method": "post",
                                 "body": {
-                                    "filename:": "@variables('filename')"
+                                    "filename": "@variables('filename')"
                                 },
-                                "path": "/subscriptions/@{encodeURIComponent(appsetting('WORKFLOWS_SUBSCRIPTION_ID'))}/resourcegroups/@{encodeURIComponent(appsetting('WORKFLOWS_RESOURCE_GROUP_NAME'))}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent(appsetting('AZURE_DATA_FACTORY_NAME'))}/pipelines/@{encodeURIComponent('CopyPipeline')}/CreateRun",
+                                "path": "/subscriptions/@{encodeURIComponent('abd9e36a-555c-4de4-a75d-cfc1682d67b0')}/resourcegroups/@{encodeURIComponent('rg-logic-app-pattern')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('data-factory-7iswrpc4bjram')}/pipelines/@{encodeURIComponent('CopyPipeline')}/CreateRun",
                                 "queries": {
                                     "x-ms-api-version": "2017-09-01-preview"
                                 }
