@@ -23,10 +23,7 @@ module storage 'modules/storage/storage.bicep' = {
 module logicapp 'modules/logicapp/logic.bicep' = {
   name: 'logicapp'
   params: {
-    appInsightCnxString: monitoring.outputs.insightCnxString
-    appInsightKey: monitoring.outputs.insightKey
-    location: location
-    strCnxString: storage.outputs.storageLogicAppCnxString
+    location: location    
     suffix: suffix
   }
 }
@@ -34,8 +31,12 @@ module logicapp 'modules/logicapp/logic.bicep' = {
 module logicAppSettings 'modules/logicapp/settings/settings.bicep' = {
   name: 'logicAppSettings'
   params: {
-    azureDataFactoryConnectionUrl: logicapp.outputs.logicAppName
+    azureDataFactoryConnectionUrl: connections.outputs.azureDataFactoryEndpointUrl
     webAppName: logicapp.outputs.logicAppName    
+    appInsightCnxString: monitoring.outputs.insightCnxString
+    appInsightKey: monitoring.outputs.insightKey
+    location: location
+    strCnxString: storage.outputs.storageLogicAppCnxString    
   }
 }
 

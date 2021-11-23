@@ -1,8 +1,5 @@
 param location string
 param suffix string
-param appInsightKey string
-param appInsightCnxString string
-param strCnxString string
 
 var logicName = 'logic-app-${suffix}'
 
@@ -26,72 +23,6 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
   properties: {    
     siteConfig: {
       netFrameworkVersion: 'v4.6'
-      appSettings: [
-        {
-          name: 'APP_KIND'
-          value: 'workflowApp'
-        }       
-        {
-          name: 'AzureFunctionsJobHost__extensionBundle__id'
-          value: 'Microsoft.Azure.Functions.ExtensionBundle.Workflows'
-        }
-        {
-          name: 'AzureFunctionsJobHost__extensionBundle__version'
-          value: '[1.*, 2.0.0)'
-        }         
-        {
-          name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~3'
-        }
-        {
-          name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'node'
-        }
-        {
-          name: 'FUNCTIONS_V2_COMPATIBILITY_MODE'
-          value: 'true'
-        }     
-        {
-          name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '~12'
-        }      
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appInsightKey
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: appInsightCnxString
-        }
-        {
-          name: 'AzureWebJobsStorage'
-          value: strCnxString
-        }
-        {
-          name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: strCnxString
-        }
-        {
-          name: 'WEBSITE_CONTENTSHARE'
-          value: 'logicapp98'
-        }
-        {
-          name: 'WORKFLOWS_SUBSCRIPTION_ID'
-          value: subscription().subscriptionId
-        }
-        {
-          name: 'WORKFLOWS_RESOURCE_GROUP_NAME'
-          value: resourceGroup().name
-        }
-        {
-          name: 'azuredatafactory-connectionKey'
-          value: ''
-        }
-        {
-          name: 'WORKFLOWS_LOCATION_NAME'
-          value: location
-        }
-      ]
       use32BitWorkerProcess: true
     }
     serverFarmId: webFarm.id
