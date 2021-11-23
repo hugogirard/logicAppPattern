@@ -3,30 +3,7 @@ param suffix string
 
 var strSourceName = 'strs${suffix}'
 var strDestName = 'strd${suffix}'
-var strFunction = 'strf${suffix}'
 var strLogicApp = 'strl${suffix}'
-
-resource storageAccountFunction 'Microsoft.Storage/storageAccounts@2021-04-01' = {
-  name: strFunction
-  location: location
-  sku: {
-    name: 'Standard_LRS'    
-  }
-  tags: {
-    'description': 'Function Storage'
-  }
-  kind: 'StorageV2'
-  properties: {    
-    accessTier: 'Hot'
-  }
-}
-
-resource symbolicname 'Microsoft.Storage/storageAccounts/queueServices/queues@2019-06-01' = {
-  name: '${storageAccountFunction.name}/default/processed-copy'
-  properties: {
-    metadata: {}
-  }
-}
 
 resource storageAccountLogicApp 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: strLogicApp
@@ -42,6 +19,14 @@ resource storageAccountLogicApp 'Microsoft.Storage/storageAccounts@2021-04-01' =
     accessTier: 'Hot'
   }  
 }
+
+resource symbolicname 'Microsoft.Storage/storageAccounts/queueServices/queues@2019-06-01' = {
+  name: '${storageAccountLogicApp.name}/default/processed-copy'
+  properties: {
+    metadata: {}
+  }
+}
+
 
 resource storageAccountSource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: strSourceName

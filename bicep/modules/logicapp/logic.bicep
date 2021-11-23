@@ -90,7 +90,7 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
         {
           name: 'WORKFLOWS_LOCATION_NAME'
           value: location
-        }        
+        }
       ]
       use32BitWorkerProcess: true
     }

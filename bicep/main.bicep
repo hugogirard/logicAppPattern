@@ -31,6 +31,14 @@ module logicapp 'modules/logicapp/logic.bicep' = {
   }
 }
 
+module logicAppSettings 'modules/logicapp/settings/settings.bicep' = {
+  name: 'logicAppSettings'
+  params: {
+    azureDataFactoryConnectionUrl: logicapp.outputs.
+    webAppName: logicapp.outputs.logicAppName    
+  }
+}
+
 module connections 'modules/logicapp/connections/connection.bicep' = {
   name: 'connections'
   params: {
