@@ -1,2 +1,18 @@
 {
+  "managedApiConnections": {
+    "azuredatafactory": {
+      "api": {
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/providers/Microsoft.Web/locations/eastus/managedApis/azuredatafactory"
+      },
+      "connection": {
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/resourceGroups/@appsetting('WORKFLOWS_RESOURCE_GROUP_NAME')/providers/Microsoft.Web/connections/azureDataFactorADOConnection"
+      },
+      "connectionRuntimeUrl": "@appsetting('DATA_FACTORY_CONNECTION_URL')",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('azuredatafactory-connectionKey')"
+      }
+    }
+  }
 }

@@ -37,8 +37,8 @@
                                 "filename": "@variables('filename')"
                             }
                         },
-                        "operationOptions": "DisableAsyncPattern",
-                        "runAfter": {}
+                        "runAfter": {},
+                        "operationOptions": "DisableAsyncPattern"
                     }
                 },
                 "runAfter": {
@@ -48,7 +48,25 @@
                 },
                 "else": {
                     "actions": {
-
+                        "Create_a_pipeline_run": {
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "referenceName": "azuredatafactory"
+                                    }
+                                },
+                                "method": "post",
+                                "body": {
+                                    "filename:": "@variables('filename')"
+                                },
+                                "path": "/subscriptions/@{encodeURIComponent(appsetting('WORKFLOWS_SUBSCRIPTION_ID'))}/resourcegroups/@{encodeURIComponent(appsetting('WORKFLOWS_RESOURCE_GROUP_NAME'))}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent(appsetting('AZURE_DATA_FACTORY_NAME'))}/pipelines/@{encodeURIComponent('CopyPipeline')}/CreateRun",
+                                "queries": {
+                                    "x-ms-api-version": "2017-09-01-preview"
+                                }
+                            },
+                            "runAfter": {}
+                        }
                     }
                 }
             }
