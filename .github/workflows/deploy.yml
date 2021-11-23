@@ -9,7 +9,7 @@ on:
        required: true  
 env:
   LOCATION: 'eastus'
-  RESOURCE_GROUP_NAME: github.event.inputs.resourceGroupName
+  RESOURCE_GROUP_NAME: ${{ github.event.inputs.resourceGroupName }}
 
 jobs:
   create-azure-resources:

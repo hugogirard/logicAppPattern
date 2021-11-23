@@ -41,4 +41,5 @@ resource accessPolicies 'Microsoft.Web/connections/accessPolicies@2016-06-01' = 
   }
 }
 
-//output azureDataFactoryEndpointUrl string = reference(azureDataFactoryConnection.id).properties.connectionRuntimeUrl
+
+output azureDataFactoryEndpointUrl string = reference(azureDataFactoryConnection.id,azureDataFactoryConnection.apiVersion,'full').properties.connectionRuntimeUrl

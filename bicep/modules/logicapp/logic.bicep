@@ -83,6 +83,18 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'logicapp98'
         }
+        {
+          name: 'WORKFLOWS_SUBSCRIPTION_ID'
+          value: subscription().subscriptionId
+        }
+        {
+          name: 'WORKFLOWS_RESOURCE_GROUP_NAME'
+          value: resourceGroup().name
+        }
+        {
+          name: 'azuredatafactory-connectionKey'
+          value: ''
+        }
       ]
       use32BitWorkerProcess: true
     }
