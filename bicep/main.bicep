@@ -36,7 +36,8 @@ module logicAppSettings 'modules/logicapp/settings/settings.bicep' = {
     appInsightCnxString: monitoring.outputs.insightCnxString
     appInsightKey: monitoring.outputs.insightKey
     location: location
-    strCnxString: storage.outputs.storageLogicAppCnxString    
+    strCnxString: storage.outputs.storageLogicAppCnxString
+    azureDataFactoryName: dataFactory.outputs.dataFactoryName
   }
 }
 

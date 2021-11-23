@@ -1,5 +1,6 @@
 param webAppName string
 param azureDataFactoryConnectionUrl string
+param azureDataFactoryName string
 param appInsightKey string
 param appInsightCnxString string
 param strCnxString string
@@ -28,7 +29,7 @@ resource appsettings 'Microsoft.Web/sites/config@2021-02-01' = {
       'WEBSITE_CONTENTSHARE': 'logicapp98'
       'WORKFLOWS_SUBSCRIPTION_ID': subscription().subscriptionId
       'WORKFLOWS_RESOURCE_GROUP_NAME': resourceGroup().name
-      'azuredatafactory-connectionKey': ''
+      'AZURE_DATA_FACTORY_NAME': azureDataFactoryName
       'WORKFLOWS_LOCATION_NAME': location
   }
 }
