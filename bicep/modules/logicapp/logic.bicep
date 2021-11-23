@@ -52,14 +52,6 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
           value: 'true'
         }     
         {
-          name: 'WORKFLOWS_SUBSCRIPTION_ID'
-          value: subscription().subscriptionId
-        }
-        {
-          name: 'WORKFLOWS_LOCATION_NAME'
-          value: location
-        }
-        {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
           value: '~12'
         }      
@@ -95,6 +87,10 @@ resource logiapp 'Microsoft.Web/sites@2021-02-01' = {
           name: 'azuredatafactory-connectionKey'
           value: ''
         }
+        {
+          name: 'WORKFLOWS_LOCATION_NAME'
+          value: location
+        }        
       ]
       use32BitWorkerProcess: true
     }

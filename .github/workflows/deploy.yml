@@ -1,15 +1,19 @@
 name: Deploy
 
 on:
-  workflow_dispatch:
-   inputs:
-     resourceGroupName:
-       description: 'Name of the resource group'
-       default: 'rg-logic-app-pattern'
-       required: true  
+  push:
+    branches:
+      - v2DevOps
+  # workflow_dispatch:
+  #  inputs:
+  #    resourceGroupName:
+  #      description: 'Name of the resource group'
+  #      default: 'rg-logic-app-pattern'
+  #      required: true  
 env:
   LOCATION: 'eastus'
-  RESOURCE_GROUP_NAME: ${{ github.event.inputs.resourceGroupName }}
+  RESOURCE_GROUP_NAME: 'rg-logic-app-pattern'
+  #RESOURCE_GROUP_NAME: ${{ github.event.inputs.resourceGroupName }}
 
 jobs:
   create-azure-resources:
